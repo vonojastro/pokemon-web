@@ -18,11 +18,15 @@ import uuid from "react-uuid";
 import CircleIcon from "@mui/icons-material/Circle";
 import useStyles from "./styles";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersFetch } from "../redux/actions/getPokemonActions";
+import {
+  getAllPokemonFetch,
+  getPokemonFetch,
+} from "../redux/actions/pokemonActions";
 import { Pokemon } from "@/dataTypes/pokemonData";
 import Image from "next/image";
 import { CircularProgress, LinearProgress } from "@material-ui/core";
-// import { Users } from "@/dataTypes/usersData";
+import { useEffect } from "react";
+import { Autocomplete } from "@mui/material";
 
 const defaultTheme = createTheme();
 
@@ -52,9 +56,20 @@ const Home = () => {
       pokemonReducer: { pokemon: Pokemon; loading: any; error: any };
     }) => state.pokemonReducer
   );
-  console.log("pokemon", pokemon);
-  console.log("err", error);
-  console.log("loading", loading);
+
+  const { pokemons } = useSelector(
+    (state: {
+      pokemonsReducer: { pokemons: Pokemon[]; loading: any; error: any };
+    }) => state.pokemonsReducer
+  );
+
+  const pokemonOptions = pokemons?.map((p) => ({ label: p.name }));
+
+  useEffect(() => {
+    if (pokemons.length === 0) {
+      dispatch(getAllPokemonFetch({}));
+    }
+  }, [pokemons, dispatch]);
   const classes = useStyles();
 
   const MIN = 0;
@@ -63,8 +78,9 @@ const Home = () => {
   const normalise = (value: number) => ((value - MIN) * 100) / (MAX - MIN);
 
   const submit: SubmitHandler<FormValue> = (data) => {
-    dispatch(getUsersFetch({ argument: data.query.toLocaleLowerCase() }));
+    dispatch(getPokemonFetch({ argument: data.query.toLocaleLowerCase() }));
     reset();
+    console.log(data);
   };
 
   return (
@@ -101,7 +117,7 @@ const Home = () => {
               Search Pokemon
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit(submit)}>
-              <TextField
+              {/* <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -109,6 +125,15 @@ const Home = () => {
                 label="Search"
                 autoFocus
                 {...register("query")}
+              /> */}
+              <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                options={pokemonOptions}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Search" />
+                )}
               />
               <Button
                 type="submit"
@@ -133,18 +158,22 @@ const Home = () => {
                 {/* <p>Height: {pokemon.height}</p>
                   <p>Weight: {pokemon.weight}</p> */}
                 <div className={classes.images}>
-                  <Image
-                    src={pokemon?.sprites?.back_shiny}
-                    alt="img"
-                    width={150}
-                    height={150}
-                  />
-                  <Image
-                    src={pokemon?.sprites?.front_shiny}
-                    alt="img"
-                    width={150}
-                    height={150}
-                  />
+                  {pokemon.sprites && (
+                    <>
+                      <Image
+                        src={pokemon?.sprites?.back_shiny}
+                        alt="img"
+                        width={150}
+                        height={150}
+                      />
+                      <Image
+                        src={pokemon?.sprites?.front_shiny}
+                        alt="img"
+                        width={150}
+                        height={150}
+                      />
+                    </>
+                  )}
                 </div>
                 <div className={classes.statsList}>
                   {pokemon?.stats?.map((st) => (
