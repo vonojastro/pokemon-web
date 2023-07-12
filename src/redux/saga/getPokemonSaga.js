@@ -12,8 +12,8 @@ function pokemonQueryApi(argument) {
 }
 
 function* pokemonQuery(action) {
-  const { argument } = action.payload;
   try {
+    const { argument } = action.payload;
     const response = yield call(pokemonQueryApi, argument);
     yield put({ type: GET_POKEMON_SUCCESS, response });
   } catch (error ) {

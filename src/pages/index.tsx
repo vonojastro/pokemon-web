@@ -63,7 +63,7 @@ const Home = () => {
     }) => state.pokemonsReducer
   );
 
-  const pokemonOptions = pokemons?.map((p) => ({ label: p.name }));
+
 
   useEffect(() => {
     if (pokemons.length === 0) {
@@ -80,7 +80,6 @@ const Home = () => {
   const submit: SubmitHandler<FormValue> = (data) => {
     dispatch(getPokemonFetch({ argument: data.query.toLocaleLowerCase() }));
     reset();
-    console.log(data);
   };
 
   return (
@@ -117,7 +116,7 @@ const Home = () => {
               Search Pokemon
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit(submit)}>
-              {/* <TextField
+              <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -125,16 +124,16 @@ const Home = () => {
                 label="Search"
                 autoFocus
                 {...register("query")}
-              /> */}
-              <Autocomplete
+              />
+              {/* <Autocomplete
                 disablePortal
                 id="combo-box-demo"
-                options={pokemonOptions}
+                options={pokemons?.map((p) => ({ label: p.name }));}
                 sx={{ width: 300 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Search" />
                 )}
-              />
+              /> */}
               <Button
                 type="submit"
                 fullWidth
