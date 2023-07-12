@@ -8,7 +8,7 @@ import pokemonReducer from "../redux/reducer/getPokemonReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 const rootReducer = combineReducers({ pokemonReducer });
-const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
+export const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
 
 sagaMiddleware.run(mySaga);
 

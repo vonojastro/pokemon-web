@@ -30,7 +30,7 @@ type FormValue = {
   query: string;
 };
 
-export default function Home() {
+const Home = () => {
   const [formData, setFormData] = React.useState<FormValue>({
     query: "",
   });
@@ -48,8 +48,9 @@ export default function Home() {
 
   const dispatch = useDispatch();
   const { pokemon, loading, error } = useSelector(
-    (state: { pokemonReducer: { pokemon: Pokemon; loading: any; error: any } }) =>
-      state.pokemonReducer
+    (state: {
+      pokemonReducer: { pokemon: Pokemon; loading: any; error: any };
+    }) => state.pokemonReducer
   );
   console.log("pokemon", pokemon);
   console.log("err", error);
@@ -96,7 +97,7 @@ export default function Home() {
               alignItems: "center",
             }}
           >
-            <Typography component="h1" variant="h5">
+            <Typography data-testid="title" component="h1" variant="h5">
               Search Pokemon
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit(submit)}>
@@ -164,7 +165,7 @@ export default function Home() {
               </div>
             )}
 
-            {!pokemon.name && !error && (
+            {!pokemon.name && !error && !loading && (
               <Box
                 sx={{
                   my: 1,
@@ -175,7 +176,9 @@ export default function Home() {
                   alignItems: "center",
                 }}
               >
-                <h2 style={{ textAlign: "center" }}>Search Pokemon</h2>
+                <h2 style={{ textAlign: "center" }} data-testid="message">
+                  Welcome
+                </h2>
                 <Image
                   src="https://www.hubpng.com/files/preview/960x1018/11578610696vzkng1nsfne4y68tzr3qhqml7ettrqh5fj2cd9xisn2jobmunmesktq4hkplzniyaz21qtszyrmbsd23jefx56wojuobq7hexpnp.png"
                   alt="img"
@@ -195,7 +198,9 @@ export default function Home() {
                   alignItems: "center",
                 }}
               >
-                <h2 style={{ textAlign: "center", padding: "10px 0px" }}>Pokemon not found</h2>
+                <h2 style={{ textAlign: "center", padding: "10px 0px" }}>
+                  Pokemon not found
+                </h2>
                 <Image
                   src="https://cdn.quotesgram.com/img/31/14/2114400164-Sad_Pikachu_by_BeebarbX.jpg"
                   alt="img"
@@ -205,10 +210,25 @@ export default function Home() {
               </Box>
             )}
 
-            {loading && !pokemon.name && !error && <CircularProgress />}
+            {loading && !pokemon.name && !error && (
+              <Box
+                sx={{
+                  my: 1,
+                  mx: 3,
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            )}
           </Box>
         </Grid>
       </Grid>
     </ThemeProvider>
   );
-}
+};
+
+export default Home;
