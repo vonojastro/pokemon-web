@@ -43,6 +43,7 @@ const Home = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<FormValue>({
     defaultValues: {
@@ -78,7 +79,7 @@ const Home = () => {
   const normalise = (value: number) => ((value - MIN) * 100) / (MAX - MIN);
 
   const submit: SubmitHandler<FormValue> = (data) => {
-    dispatch(getPokemonFetch({ argument: data.query.toLocaleLowerCase() }));
+    dispatch(getPokemonFetch({ argument: data?.query?.toLocaleLowerCase() }));
     reset();
   };
 
@@ -106,6 +107,7 @@ const Home = () => {
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
             sx={{
+              mt: 2,
               mx: 3,
               display: "flex",
               flexDirection: "column",
@@ -116,7 +118,7 @@ const Home = () => {
               Search Pokemon
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit(submit)}>
-              <TextField
+              {/* <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -124,16 +126,17 @@ const Home = () => {
                 label="Search"
                 autoFocus
                 {...register("query")}
-              />
-              {/* <Autocomplete
+              /> */}
+              <Autocomplete
                 disablePortal
                 id="combo-box-demo"
-                options={pokemons?.map((p) => ({ label: p.name }));}
+                options={pokemons?.map((p) => ({ label: p.name }))}
                 sx={{ width: 300 }}
                 renderInput={(params) => (
                   <TextField {...params} label="Search" />
                 )}
-              /> */}
+                onChange={(event, value: any) => setValue('query', value?.label)}
+              />
               <Button
                 type="submit"
                 fullWidth
